@@ -10,6 +10,7 @@ class DrawableObject(pygame.sprite.Sprite):
         super().__init__()
 
         self.image = pygame.Surface(size)
+        self.RAW_TEXTURE = texture
 
         if texture is None:
             self.image.fill(color)

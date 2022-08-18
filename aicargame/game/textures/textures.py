@@ -13,7 +13,6 @@ class TexturesMeta(EnumMeta):
         texture = super().__getattribute__(img)
         if isinstance(texture, cls):
             texture = TexturesMeta.__cached_texture(cls, PREFIX / texture.value)
-            # print(f"{TexturesMeta.__cached_texture.cache_info()}")
         return texture
 
     @lru_cache
