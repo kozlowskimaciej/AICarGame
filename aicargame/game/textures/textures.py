@@ -5,6 +5,7 @@ PREFIX = Path("aicargame/game/textures/media/").resolve()
 
 
 class Textures(Enum):
+    BACKGROUND = "bg.png"
     PLAYER = "player.gif"
     ENEMY = "nuclear-bomb.png"
 
