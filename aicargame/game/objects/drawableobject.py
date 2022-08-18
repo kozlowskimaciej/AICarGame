@@ -14,14 +14,8 @@ class DrawableObject(pygame.sprite.Sprite):
         if texture is None:
             self.image.fill(color)
         else:
-            try:
-                texture = pygame.image.load(str(texture))
-            except Exception as ex:
-                self.image.fill((255, 255, 255))
-                print(str(ex))
-            else:
-                texture = pygame.transform.scale(texture, size)
-                self.image = texture
+            texture = pygame.transform.scale(texture, size)
+            self.image = texture
 
         self.rect = self.image.get_rect()
         self.rect.center = position

@@ -1,10 +1,35 @@
-from enum import Enum, auto
+from enum import Enum, EnumMeta
 from pathlib import Path
+from functools import lru_cache
+
+from pygame.image import load
+import pygame
 
 PREFIX = Path("aicargame/game/textures/media/").resolve()
 
 
-class Textures(Enum):
+class TexturesMeta(EnumMeta):
+    def __getattribute__(cls, img: pygame.Surface | Path) -> pygame.Surface:
+        texture = super().__getattribute__(img)
+        if isinstance(texture, cls):
+            texture = TexturesMeta.__cached_texture(cls, PREFIX / texture.value)
+            # print(f"{TexturesMeta.__cached_texture.cache_info()}")
+        return texture
+
+    @lru_cache
+    def __cached_texture(self, path: Path) -> pygame.Surface:
+        if isinstance(path, Path):
+            try:
+                texture = load(path)
+            except Exception as ex:
+                print("ERR" + ex)
+        else:
+            raise FileNotFoundError("Invalid path to texture")
+
+        return texture
+
+
+class Textures(Enum, metaclass=TexturesMeta):
     BACKGROUND = "bg.png"
     PLAYER = "player.gif"
     ENEMY = "nuclear-bomb.png"
