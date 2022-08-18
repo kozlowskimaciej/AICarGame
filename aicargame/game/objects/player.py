@@ -25,12 +25,6 @@ class Player(DrawableObject):
         if keys[pygame.K_RIGHT]:
             vec.x += self.__velocity
 
-        if keys[pygame.K_UP]:
-            vec.y -= self.__velocity
-
-        if keys[pygame.K_DOWN]:
-            vec.y += self.__velocity
-
         self.rect.move_ip(vec)
 
         self._keep_inside()

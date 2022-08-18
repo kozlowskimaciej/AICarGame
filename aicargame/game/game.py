@@ -4,7 +4,7 @@ from tkinter.tix import WINDOW
 import pygame
 from pygame import Vector2
 
-from aicargame.globals import WINDOW_HEIGHT, WINDOW_WIDTH, ENEMY_INTERVAL
+from aicargame.globals import PLAYER_SIZE, PLAYER_START, WINDOW_HEIGHT, WINDOW_WIDTH, ENEMY_INTERVAL
 from aicargame.game.objects.player import Player
 from aicargame.game.objects.enemy import Enemy
 from aicargame.game.textures.textures import Textures
@@ -19,7 +19,7 @@ class Game:
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AICarGame")
 
-        obj = Player(Vector2(50, 50), Vector2(100, 100))
+        obj = Player(PLAYER_START, PLAYER_SIZE)
 
         self.sprites.add(obj)
 
