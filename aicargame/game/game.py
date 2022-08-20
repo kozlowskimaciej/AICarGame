@@ -1,4 +1,5 @@
 import time
+import random
 
 import pygame
 
@@ -17,8 +18,8 @@ from aicargame.game.textures.textures import Textures
 class Game:
     enemySprites = pygame.sprite.Group()
     window: pygame.Surface
-    bg = Textures.BACKGROUND
-    bg = pygame.transform.scale(bg, (WINDOW_WIDTH, WINDOW_HEIGHT))
+    bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
+    next_enemy_spawn: int = ENEMY_INTERVAL[1] / 10
 
     def __init__(self):
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -26,14 +27,26 @@ class Game:
 
         self.__player = Player(PLAYER_START, PLAYER_SIZE)
 
+    def reset(self):
+        self.__player.rect.topleft = PLAYER_START
+        self.enemySprites.empty()
+
     def checkCollisions(self):
         if pygame.sprite.spritecollide(self.__player, self.enemySprites, False) != []:
-            print("Uuu kraksa")
+            self.reset()
 
     def update(self):
         cur_time = time.time()
 
-        if cur_time - Enemy.timer >= ENEMY_INTERVAL:
+        if cur_time - Enemy.timer >= self.next_enemy_spawn:
+            self.next_enemy_spawn = (
+                int(
+                    random.randrange(
+                        start=ENEMY_INTERVAL[0], stop=ENEMY_INTERVAL[1], step=1
+                    )
+                )
+                / 10
+            )
             self.enemySprites.add(Enemy.spawnEnemy())
             Enemy.timer = cur_time
 

@@ -41,13 +41,16 @@ class Enemy(DrawableObject):
         self.__center = Vector2(self.rect.center)
 
     def update(self):
+        if self.__size == ENEMY_MAX_SIZE:
+            self.__velocity = self.__velocity * 1.2
+
         self.__center = self.__center + self.__velocity
         self.rect.center = self.__center
         if self.rect.top > WINDOW_HEIGHT:
             self.kill()
 
         self.__time = self.__time + 1
-        if self.__size.x > ENEMY_MAX_SIZE.x :
+        if self.__size.x > ENEMY_MAX_SIZE.x:
             self.__size = ENEMY_MAX_SIZE
         elif self.__size.x < ENEMY_MAX_SIZE.x:
             log = math.log(self.__time)
