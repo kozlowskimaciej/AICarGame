@@ -3,12 +3,20 @@ from pygame import Vector2
 
 from aicargame.game.objects.drawableobject import DrawableObject
 from aicargame.game.textures.textures import Textures
-from aicargame.globals import PLAYER_VELOCITY
+from aicargame.globals import (
+    PLAYER_VELOCITY,
+    PLAYER_SIZE,
+    WINDOW_HEIGHT,
+    WINDOW_WIDTH,
+)
+
+PLAYER_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.9)
+PLAYER_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * PLAYER_SIZE
 
 
 class Player(DrawableObject):
-    def __init__(self, position: Vector2, size: Vector2):
-        super().__init__(position, size, Textures.PLAYER)
+    def __init__(self, position: Vector2 = PLAYER_START):
+        super().__init__(position, PLAYER_SIZE, Textures.PLAYER)
         print(str(Textures.PLAYER))
         self.__velocity = PLAYER_VELOCITY
         self.__x_border = 10
@@ -46,3 +54,6 @@ class Player(DrawableObject):
 
         if self.rect.centery > win_y - win_y_border:
             self.rect.centery = win_y - win_y_border
+
+    def reset(self):
+        self.rect.topleft = PLAYER_START

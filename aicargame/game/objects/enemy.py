@@ -8,18 +8,22 @@ from pygame import Vector2
 from aicargame.game.objects.drawableobject import DrawableObject
 from aicargame.game.textures.textures import Textures
 from aicargame.globals import (
-    ENEMY_MAX_SIZE,
     WINDOW_HEIGHT,
-    ENEMY_START_SIZE,
-    ENEMY_SPEED,
-    FIRST_LANE_START,
-    SECOND_LANE_START,
-    THIRD_LANE_START,
-    FIRST_LANE_VECTOR,
-    SECOND_LANE_VECTOR,
-    THIRD_LANE_VECTOR,
     WINDOW_WIDTH,
+    ENEMY_MAX_SIZE,
+    ENEMY_START_SIZE,
+    ENEMY_VELOCITY,
 )
+
+ENEMY_START_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * ENEMY_START_SIZE
+ENEMY_MAX_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * ENEMY_MAX_SIZE
+
+SECOND_LANE_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.25)
+FIRST_LANE_START = Vector2(float(WINDOW_WIDTH * 0.44), float(WINDOW_HEIGHT * 0.25))
+THIRD_LANE_START = Vector2(WINDOW_WIDTH * 0.56, WINDOW_HEIGHT * 0.25)
+SECOND_LANE_VECTOR = Vector2(0, 1)
+FIRST_LANE_VECTOR = Vector2(WINDOW_WIDTH * -0.36, WINDOW_HEIGHT * 0.75).normalize()
+THIRD_LANE_VECTOR = Vector2(-FIRST_LANE_VECTOR.x, FIRST_LANE_VECTOR.y)
 
 
 class Enemy(DrawableObject):
@@ -29,14 +33,14 @@ class Enemy(DrawableObject):
         super().__init__(position, (0, 0), texture=Textures.ENEMY)
 
         if position == FIRST_LANE_START:
-            self.__velocity = FIRST_LANE_VECTOR
+            direction = FIRST_LANE_VECTOR
         elif position == SECOND_LANE_START:
-            self.__velocity = SECOND_LANE_VECTOR
+            direction = SECOND_LANE_VECTOR
         else:
-            self.__velocity = THIRD_LANE_VECTOR
+            direction = THIRD_LANE_VECTOR
 
         self.__time = 1
-        self.__velocity = self.__velocity * ENEMY_SPEED
+        self.__velocity = direction * ENEMY_VELOCITY
         self.__size = Vector2(ENEMY_START_SIZE)
         self.__center = Vector2(self.rect.center)
 

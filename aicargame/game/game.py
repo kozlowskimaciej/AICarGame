@@ -4,8 +4,6 @@ import random
 import pygame
 
 from aicargame.globals import (
-    PLAYER_SIZE,
-    PLAYER_START,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
     ENEMY_INTERVAL,
@@ -21,16 +19,16 @@ class Game:
     gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
     window: pygame.Surface
     bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
-    next_enemy_spawn: int = ENEMY_INTERVAL[1] / 10
+    next_enemy_spawn: int = ENEMY_INTERVAL[1] / 100
 
     def __init__(self):
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AICarGame")
 
-        self.__player = Player(PLAYER_START, PLAYER_SIZE)
+        self.__player = Player()
 
     def reset(self):
-        self.__player.rect.topleft = PLAYER_START
+        self.__player.reset()
         self.enemySprites.empty()
 
     def checkCollisions(self):
@@ -47,7 +45,7 @@ class Game:
                         start=ENEMY_INTERVAL[0], stop=ENEMY_INTERVAL[1], step=1
                     )
                 )
-                / 10
+                / 100
             )
             self.enemySprites.add(Enemy.spawnEnemy())
             Enemy.timer = cur_time
