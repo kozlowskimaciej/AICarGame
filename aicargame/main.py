@@ -8,6 +8,7 @@ from aicargame.game.objects.enemy import Enemy
 
 pygame.init()
 
+
 game = Game()
 
 run = True

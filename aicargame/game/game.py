@@ -12,11 +12,13 @@ from aicargame.globals import (
 )
 from aicargame.game.objects.player import Player
 from aicargame.game.objects.enemy import Enemy
+from aicargame.game.objects.gui.speedo import Speedo
 from aicargame.game.textures.textures import Textures
 
 
 class Game:
     enemySprites = pygame.sprite.Group()
+    gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
     window: pygame.Surface
     bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
     next_enemy_spawn: int = ENEMY_INTERVAL[1] / 10
@@ -57,4 +59,7 @@ class Game:
         self.__player.update()
         self.window.blit(self.__player.image, self.__player.rect.topleft)
         self.enemySprites.update()
+        self.gui.update()
+
         self.enemySprites.draw(self.window)
+        self.window.blit(self.gui.image, (0, 0))
