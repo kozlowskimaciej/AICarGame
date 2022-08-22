@@ -10,6 +10,7 @@ from aicargame.globals import (
 )
 from aicargame.game.objects.player import Player
 from aicargame.game.objects.enemy import Enemy
+from aicargame.game.objects.gui.gui import GUI
 from aicargame.game.objects.gui.speedo import Speedo
 from aicargame.game.objects.gui.mileage import Mileage
 from aicargame.game.textures.textures import Textures
@@ -17,8 +18,9 @@ from aicargame.game.textures.textures import Textures
 
 class Game:
     enemySprites = pygame.sprite.Group()
-    gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
-    gui2 = Mileage((0, 100), (WINDOW_WIDTH, 100))
+    #gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
+    #gui2 = Mileage((0, 100), (WINDOW_WIDTH, 100))
+    gui: GUI
     window: pygame.Surface
     bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
     next_enemy_spawn: int = ENEMY_INTERVAL[1] / 100
@@ -27,11 +29,13 @@ class Game:
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AICarGame")
 
+        self.gui = GUI(self.window)
         self.__player = Player()
 
     def reset(self):
         self.__player.reset()
         self.enemySprites.empty()
+        self.gui.reset()
 
     def checkCollisions(self):
         if pygame.sprite.spritecollide(self.__player, self.enemySprites, False) != []:
@@ -60,8 +64,6 @@ class Game:
         self.window.blit(self.__player.image, self.__player.rect.topleft)
         self.enemySprites.update()
         self.gui.update()
-        self.gui2.update()
 
         self.enemySprites.draw(self.window)
-        self.window.blit(self.gui.image, (0, 0))
-        self.window.blit(self.gui2.image, (0, 100))
+        self.gui.render()

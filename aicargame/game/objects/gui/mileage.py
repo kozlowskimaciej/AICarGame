@@ -3,15 +3,17 @@ from pygame import Vector2
 
 from aicargame.game.objects.drawableobject import DrawableObject
 
-pygame.font.init
-
 class Mileage(DrawableObject):
     distance = 0
-    font = pygame.font.SysFont("Arial", 24)
+    font: pygame.font.Font
 
-    def __init__(self, position: Vector2, size: Vector2):
+    def __init__(self, position: Vector2, size: Vector2, font: pygame.font.Font):
         super().__init__(position, size, color=(0, 0, 0))
+        self.font = font
 
     def update(self):
         self.distance += 1
         self.image = self.font.render(str(self.distance) + "m", False, (0, 0, 0))
+
+    def reset(self):
+        self.distance = 0

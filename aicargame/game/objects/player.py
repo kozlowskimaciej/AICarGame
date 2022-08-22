@@ -17,7 +17,6 @@ PLAYER_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * PLAYER_SIZE
 class Player(DrawableObject):
     def __init__(self, position: Vector2 = PLAYER_START):
         super().__init__(position, PLAYER_SIZE, Textures.PLAYER)
-        print(str(Textures.PLAYER))
         self.__velocity = PLAYER_VELOCITY
         self.__x_border = 10
         self.__y_border = 10
