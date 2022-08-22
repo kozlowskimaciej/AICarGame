@@ -12,7 +12,6 @@ class Mileage(DrawableObject):
         self.font = font
 
     def update(self, speed: float):
-        print(speed)
         self.distance += speed / 10
 
         if(self.distance < 1000):

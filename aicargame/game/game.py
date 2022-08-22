@@ -4,6 +4,8 @@ import random
 import pygame
 
 from aicargame.globals import (
+    ENEMY_START_VELOCITY,
+    SPEED_CHANGE_TIMER,
     WINDOW_HEIGHT,
     WINDOW_WIDTH,
     ENEMY_INTERVAL,
@@ -35,6 +37,7 @@ class Game:
     def reset(self):
         self.__player.reset()
         self.enemySprites.empty()
+        Enemy.start_velocity = ENEMY_START_VELOCITY
         self.gui.reset()
 
     def checkCollisions(self):
@@ -44,7 +47,7 @@ class Game:
     def update(self):
         cur_time = time.time()
 
-        if cur_time - Enemy.timer >= self.next_enemy_spawn:
+        if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
             self.next_enemy_spawn = (
                 int(
                     random.randrange(
@@ -54,7 +57,11 @@ class Game:
                 / 100
             )
             self.enemySprites.add(Enemy.spawnEnemy())
-            Enemy.timer = cur_time
+            Enemy.spawn_timer = cur_time
+
+        if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
+            Enemy.start_velocity += 0.2
+            Enemy.vel_change_timer = cur_time
 
         self.__player.update()
         self.enemySprites.update()
