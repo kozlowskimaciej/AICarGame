@@ -56,14 +56,16 @@ class Game:
             self.enemySprites.add(Enemy.spawnEnemy())
             Enemy.timer = cur_time
 
-        self.checkCollisions()
-
-        self.window.fill((0, 0, 0))
-        self.window.blit(self.bg, (0, 0))
         self.__player.update()
-        self.window.blit(self.__player.image, self.__player.rect.topleft)
         self.enemySprites.update()
         self.gui.update()
+        self.checkCollisions()
 
+    def render(self):
+        self.window.fill((0, 0, 0))
+        self.window.blit(self.bg, (0, 0))
+        self.window.blit(self.__player.image, self.__player.rect.topleft)
         self.enemySprites.draw(self.window)
         self.gui.render()
+        pygame.display.update()
+

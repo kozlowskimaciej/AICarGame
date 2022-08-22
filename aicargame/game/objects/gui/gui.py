@@ -19,7 +19,7 @@ class GUI:
 
     def update(self):
         self.speedo.update()
-        self.mileage.update()
+        self.mileage.update(Speedo.speed)
 
     def render(self):
         self.window.blit(self.speedo.image, (5, 0))

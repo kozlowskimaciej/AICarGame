@@ -55,4 +55,4 @@ class Player(DrawableObject):
             self.rect.centery = win_y - win_y_border
 
     def reset(self):
-        self.rect.topleft = PLAYER_START
+        self.rect.center = PLAYER_START

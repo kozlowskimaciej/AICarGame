@@ -11,9 +11,9 @@ class Mileage(DrawableObject):
         super().__init__(position, size, color=(0, 0, 0))
         self.font = font
 
-    def update(self):
-        self.distance += 1
-        self.image = self.font.render(str(self.distance) + "m", False, (0, 0, 0))
+    def update(self, speed: float):
+        self.distance += speed / 10
+        self.image = self.font.render(str(int(self.distance)) + "m", False, (0, 0, 0))
 
     def reset(self):
         self.distance = 0

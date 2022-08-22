@@ -22,7 +22,7 @@ def main():
                 run = False
 
         game.update()
-        pygame.display.update()
+        game.render()
 
     pygame.quit()
 
