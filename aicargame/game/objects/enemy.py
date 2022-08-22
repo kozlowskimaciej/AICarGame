@@ -13,22 +13,23 @@ from aicargame.globals import (
     ENEMY_MAX_SIZE,
     ENEMY_START_SIZE,
     ENEMY_START_VELOCITY,
-    ENEMY_ACCELERATION
+    ENEMY_ACCELERATION,
 )
 
-ENEMY_START_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * ENEMY_START_SIZE
-ENEMY_MAX_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * ENEMY_MAX_SIZE
+ENEMY_START_SIZE = Vector2(WINDOW_WIDTH, WINDOW_WIDTH * 0.9) * ENEMY_START_SIZE
+ENEMY_MAX_SIZE = Vector2(WINDOW_WIDTH, WINDOW_WIDTH * 0.9) * ENEMY_MAX_SIZE
+ENEMY_START_AREA = ENEMY_START_SIZE.x * ENEMY_START_SIZE.y
+ENEMY_MAX_AREA = ENEMY_MAX_SIZE.x * ENEMY_MAX_SIZE.y
 
-SECOND_LANE_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.25)
-FIRST_LANE_START = Vector2(float(WINDOW_WIDTH * 0.44), float(WINDOW_HEIGHT * 0.25))
-THIRD_LANE_START = Vector2(WINDOW_WIDTH * 0.56, WINDOW_HEIGHT * 0.25)
+SECOND_LANE_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.35)
+FIRST_LANE_START = Vector2(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.35)
+THIRD_LANE_START = Vector2(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT * 0.35)
 SECOND_LANE_VECTOR = Vector2(0, 1)
-FIRST_LANE_VECTOR = Vector2(WINDOW_WIDTH * -0.36, WINDOW_HEIGHT * 0.75).normalize()
+FIRST_LANE_VECTOR = Vector2(WINDOW_WIDTH * -0.2, WINDOW_HEIGHT * 0.65).normalize()
 THIRD_LANE_VECTOR = Vector2(-FIRST_LANE_VECTOR.x, FIRST_LANE_VECTOR.y)
 
 
 class Enemy(DrawableObject):
-    start_velocity = ENEMY_START_VELOCITY
     spawn_timer = time.time()
     vel_change_timer = time.time()
 
@@ -43,10 +44,12 @@ class Enemy(DrawableObject):
             direction = THIRD_LANE_VECTOR
 
         self.__time = 1
-        self.__velocity = direction * Enemy.start_velocity
-        print(Enemy.start_velocity)
-        print(self.__velocity)
+        self._log_conv = ENEMY_START_VELOCITY / math.log(
+            (WINDOW_HEIGHT * 0.65) / (ENEMY_MAX_AREA - ENEMY_START_AREA) * 0.2
+        )
+        self.__velocity = direction * ENEMY_START_VELOCITY
         self.__size = Vector2(ENEMY_START_SIZE)
+        self._area = ENEMY_START_AREA
         self.__center = Vector2(self.rect.center)
 
     def update(self):
@@ -58,13 +61,13 @@ class Enemy(DrawableObject):
         if self.rect.top > WINDOW_HEIGHT:
             self.kill()
 
-        self.__time = self.__time + 1
-        if self.__size.x > ENEMY_MAX_SIZE.x:
+        self.__time += 1
+        if self._area > ENEMY_MAX_AREA:
             self.__size = ENEMY_MAX_SIZE
-        elif self.__size.x < ENEMY_MAX_SIZE.x:
-            log = math.log(self.__time)
-            self.__size.x = log * (ENEMY_MAX_SIZE.x / 5)
-            self.__size.y = log * (ENEMY_MAX_SIZE.y / 5)
+        elif self._area < ENEMY_MAX_AREA:
+            area_inc = math.log(self.__time) * self._log_conv
+            self.__size.x = ENEMY_START_SIZE.x * math.sqrt(area_inc)
+            self.__size.y = ENEMY_START_SIZE.y * math.sqrt(area_inc)
 
         self.image = pygame.transform.scale(self.RAW_TEXTURE, self.__size)
 

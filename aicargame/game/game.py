@@ -13,15 +13,13 @@ from aicargame.globals import (
 from aicargame.game.objects.player import Player
 from aicargame.game.objects.enemy import Enemy
 from aicargame.game.objects.gui.gui import GUI
-from aicargame.game.objects.gui.speedo import Speedo
-from aicargame.game.objects.gui.mileage import Mileage
 from aicargame.game.textures.textures import Textures
 
 
 class Game:
     enemySprites = pygame.sprite.Group()
-    #gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
-    #gui2 = Mileage((0, 100), (WINDOW_WIDTH, 100))
+    # gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
+    # gui2 = Mileage((0, 100), (WINDOW_WIDTH, 100))
     gui: GUI
     window: pygame.Surface
     bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -59,10 +57,6 @@ class Game:
             self.enemySprites.add(Enemy.spawnEnemy())
             Enemy.spawn_timer = cur_time
 
-        if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
-            Enemy.start_velocity += 0.2
-            Enemy.vel_change_timer = cur_time
-
         self.__player.update()
         self.enemySprites.update()
         self.gui.update()
@@ -75,4 +69,3 @@ class Game:
         self.enemySprites.draw(self.window)
         self.gui.render()
         pygame.display.update()
-

@@ -31,8 +31,8 @@ class TexturesMeta(EnumMeta):
 class Textures(Enum, metaclass=TexturesMeta):
 
     BACKGROUND = "bg.png"
-    PLAYER = "player.gif"
-    ENEMY = "nuclear-bomb.png"
+    PLAYER = "player.png"
+    ENEMY = "player.png"
 
     def __str__(self) -> str:
         return str(PREFIX / self.value)

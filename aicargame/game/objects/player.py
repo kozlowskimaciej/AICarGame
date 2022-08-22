@@ -11,7 +11,7 @@ from aicargame.globals import (
 )
 
 PLAYER_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.9)
-PLAYER_SIZE = Vector2(WINDOW_WIDTH, WINDOW_HEIGHT) * PLAYER_SIZE
+PLAYER_SIZE = Vector2(WINDOW_WIDTH, WINDOW_WIDTH * 0.9) * PLAYER_SIZE
 
 
 class Player(DrawableObject):
