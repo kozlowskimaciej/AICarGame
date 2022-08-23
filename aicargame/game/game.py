@@ -35,7 +35,6 @@ class Game:
     def reset(self):
         self.__player.reset()
         self.enemySprites.empty()
-        Enemy.start_velocity = ENEMY_START_VELOCITY
         self.gui.reset()
 
     def checkCollisions(self):
