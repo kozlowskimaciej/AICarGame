@@ -12,8 +12,7 @@ from aicargame.globals import (
     WINDOW_WIDTH,
     ENEMY_MAX_SIZE,
     ENEMY_START_SIZE,
-    ENEMY_START_VELOCITY,
-    ENEMY_ACCELERATION,
+    ENEMY_START_VELOCITY
 )
 
 ENEMY_START_SIZE = Vector2(WINDOW_WIDTH, WINDOW_WIDTH * 0.9) * ENEMY_START_SIZE
@@ -32,6 +31,7 @@ THIRD_LANE_VECTOR = Vector2(-FIRST_LANE_VECTOR.x, FIRST_LANE_VECTOR.y)
 class Enemy(DrawableObject):
     spawn_timer = time.time()
     vel_change_timer = time.time()
+    speed = ENEMY_START_VELOCITY
 
     def __init__(self, position: Vector2):
         super().__init__(position, (0, 0), texture=Textures.ENEMY)
@@ -47,20 +47,23 @@ class Enemy(DrawableObject):
         self._time = 0
         self._max_time = (WINDOW_HEIGHT * 0.65) / ENEMY_START_VELOCITY
         self._size = Vector2(ENEMY_START_SIZE)
-        self._size_inc = Vector2((ENEMY_MAX_SIZE - ENEMY_START_SIZE) / (self._max_time * 0.1))
+        self._log_conv = (ENEMY_MAX_SIZE.x - ENEMY_START_SIZE.x) / math.log(self._max_time * 0.2 + 1)
         self._center = Vector2(self.rect.center)
         self._velocity = self._direction * ENEMY_START_VELOCITY
 
     def resize(self):
         if self._size == ENEMY_MAX_SIZE:
             return
-        if self._time >= self._max_time * 0.1:
+        if self._time >= self._max_time * 0.2:
             self._size = Vector2(ENEMY_MAX_SIZE)
             return
-        self._size += self._size_inc
+        log = math.log(self._time + 1)
+        self._size.x = ENEMY_START_SIZE.x + log * self._log_conv
+        self._size.y = self._size.x * 0.9
 
     def update(self):
         self._time += 1
+        print(self._velocity)
 
         self._center = self._center + self._velocity
         self.rect.center = self._center
@@ -69,15 +72,8 @@ class Enemy(DrawableObject):
 
         self.resize()
 
-        if self._velocity != ENEMY_START_VELOCITY + 4 and self._time >= self._max_time * 0.1:
-            self._velocity = self._direction * 8
-        #if self._area > ENEMY_MAX_AREA:
-        #    self.__size = ENEMY_MAX_SIZE
-        #elif self._area < ENEMY_MAX_AREA:
-        #    print("log conv: " + str(self._log_conv))
-        #    area_inc = math.log(self.__time) * self._log_conv
-        #    print(area_inc)
-        #    self.__size = ENEMY_START_SIZE * math.sqrt(area_inc)
+        if(self._velocity != self._direction * Enemy.speed and self._time >= self._max_time * 0.2):
+            self._velocity = self._direction * Enemy.speed
 
         self.image = pygame.transform.scale(self.RAW_TEXTURE, self._size)
 
@@ -86,13 +82,12 @@ class Enemy(DrawableObject):
 
     @staticmethod
     def spawnEnemy():
-        #rand = randint(0, 2)
-        #if rand == 0:
-        #    newEnemy = Enemy(FIRST_LANE_START)
-        #elif rand == 1:
-        #    newEnemy = Enemy(SECOND_LANE_START)
-        #else:
-        #    newEnemy = Enemy(THIRD_LANE_START)
-        newEnemy = Enemy(FIRST_LANE_START)
+        rand = randint(0, 2)
+        if rand == 0:
+            newEnemy = Enemy(FIRST_LANE_START)
+        elif rand == 1:
+            newEnemy = Enemy(SECOND_LANE_START)
+        else:
+            newEnemy = Enemy(THIRD_LANE_START)
 
         return newEnemy

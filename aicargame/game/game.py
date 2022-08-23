@@ -18,8 +18,6 @@ from aicargame.game.textures.textures import Textures
 
 class Game:
     enemySprites = pygame.sprite.Group()
-    # gui = Speedo((0, 0), (WINDOW_WIDTH, 100))
-    # gui2 = Mileage((0, 100), (WINDOW_WIDTH, 100))
     gui: GUI
     window: pygame.Surface
     bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
@@ -35,6 +33,7 @@ class Game:
     def reset(self):
         self.__player.reset()
         self.enemySprites.empty()
+        Enemy.speed = ENEMY_START_VELOCITY
         self.gui.reset()
 
     def checkCollisions(self):
@@ -55,6 +54,10 @@ class Game:
             )
             self.enemySprites.add(Enemy.spawnEnemy())
             Enemy.spawn_timer = cur_time
+
+        if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
+            Enemy.speed += 1
+            Enemy.vel_change_timer = cur_time
 
         self.__player.update()
         self.enemySprites.update()
