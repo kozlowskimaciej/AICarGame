@@ -4,7 +4,8 @@ from aicargame.game.objects.gui.speedo import Speedo
 from aicargame.game.objects.gui.mileage import Mileage
 from aicargame.game.objects.gui.record import Record
 from aicargame.globals import (
-    WINDOW_WIDTH
+    WINDOW_WIDTH,
+    WINDOW_HEIGHT
 )
 
 pygame.font.init()
@@ -13,10 +14,10 @@ class GUI:
     def __init__(self, window: pygame.Surface):
         self._window = window
         
-        font = pygame.font.SysFont("Arial", 24)
-        self._speedo = Speedo((WINDOW_WIDTH * 0.25 + 5, 12.5), (WINDOW_WIDTH / 2, 25), font)
-        self._mileage = Mileage((WINDOW_WIDTH * 0.25 + 5, 37.5), (WINDOW_WIDTH / 2, 25), font)
-        self._record = Record((WINDOW_WIDTH * 0.75 + 5, 12.5), (WINDOW_WIDTH / 2, 25), font)
+        font = pygame.font.SysFont("Arial", round(WINDOW_HEIGHT * 0.031))
+        self._speedo = Speedo((WINDOW_WIDTH * 0.26, WINDOW_HEIGHT * 0.017), (WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.033), font)
+        self._mileage = Mileage((WINDOW_WIDTH * 0.26, WINDOW_HEIGHT * 0.05), (WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.033), font)
+        self._record = Record((WINDOW_WIDTH * 0.76, WINDOW_HEIGHT * 0.017), (WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.033), font)
 
     def update(self):
         self._speedo.update()

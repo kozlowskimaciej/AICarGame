@@ -26,7 +26,7 @@ class Record(DrawableObject):
                 saveRecord.write(str(self._record))
 
         if self._record < 1000:
-            self.image = self._font.render("REKORD: " + str(int(self._record)) + "m", False, self._font_color)
+            self.image = self._font.render("REKORD: %d m" % int(self._record), False, self._font_color)
             return
         self.image = self._font.render("REKORD: %.2f km" % (self._record / 1000), False, self._font_color)
 

@@ -10,7 +10,7 @@ from aicargame.globals import (
 class Speedo(DrawableObject):
     timer = time.time()
     speed_change_timer = SPEED_CHANGE_TIMER
-    speed: float = 100
+    speed: int = 100
     font: pygame.font.Font
 
     def __init__(self, position: Vector2, size: Vector2, font: pygame.font.Font):
@@ -23,7 +23,7 @@ class Speedo(DrawableObject):
             self.speed += 5
             self.timer = cur_time
 
-        self.image = self.font.render(str(self.speed) + "km/h", False, (0, 0, 0))
+        self.image = self.font.render("%d km/h" % self.speed, False, (0, 0, 0))
 
     def reset(self):
         self.speed = 100

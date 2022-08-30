@@ -15,7 +15,7 @@ class Mileage(DrawableObject):
         self.distance += speed * 0.005
 
         if self.distance < 1000:
-            self.image = self.font.render(str(int(self.distance)) + "m", False, (0, 0, 0))
+            self.image = self.font.render("%d m" % int(self.distance), False, (0, 0, 0))
             return
         self.image = self.font.render("%.2f km" % (self.distance / 1000), False, (0, 0, 0))
 
