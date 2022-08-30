@@ -2,5 +2,5 @@
 __pycache__/
 venv*/
 scratch*/
-save/record.txt
-!save/.gitkeep
+saved/record.txt
+!saved/.gitkeep
