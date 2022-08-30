@@ -37,9 +37,8 @@ class Game:
         pygame.display.set_caption("AICarGame")
 
         if not exists("saved/record.txt"):
-            createFile = open("saved/record.txt", "wt")
-            createFile.write("0")
-            createFile.close()
+            with open("saved/record.txt", "wt") as createFile:
+                createFile.write("0")
 
         self.gui = GUI(self.window)
         self.__player = Player()
