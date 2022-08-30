@@ -91,7 +91,6 @@ class Game:
         self.checkCollisions()
 
     def render(self):
-        self.window.fill((0, 0, 0))
         self.window.blit(self.bg, (0, 0))
         self.window.blit(self.__player.image, self.__player.rect.topleft)
         self.enemySprites.draw(self.window)

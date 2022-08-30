@@ -58,7 +58,7 @@ class Enemy(DrawableObject):
         if self._velocity != self._direction * Enemy.speed and self._time >= self._max_time * 0.2:
             self._velocity = self._direction * Enemy.speed
         if self.rect.bottom >= WINDOW_HEIGHT:
-            self._velocity *= 2
+            self._velocity *= 3
 
         self.image = pygame.transform.scale(self.RAW_TEXTURE, self._size)
 
