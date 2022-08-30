@@ -20,7 +20,7 @@ class Speedo(DrawableObject):
     def update(self):
         cur_time = time.time()
         if cur_time - self.timer >= self.speed_change_timer:
-            self.speed += 10
+            self.speed += 5
             self.timer = cur_time
 
         self.image = self.font.render(str(self.speed) + "km/h", False, (0, 0, 0))

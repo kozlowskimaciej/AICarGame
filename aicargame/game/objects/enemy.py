@@ -31,14 +31,14 @@ class Enemy(DrawableObject):
         self._time = 0
         self._max_time = (WINDOW_HEIGHT * 0.65) / ENEMY_START_VELOCITY
         self._size = Vector2(ENEMY_START_SIZE)
-        self._log_conv = (ENEMY_MAX_SIZE.x - ENEMY_START_SIZE.x) / math.log(self._max_time * 0.2 + 1)
+        self._log_conv = (ENEMY_MAX_SIZE.x - ENEMY_START_SIZE.x) / math.log(self._max_time * 0.1 + 1)
         self._center = Vector2(self.rect.center)
         self._velocity = self._direction * ENEMY_START_VELOCITY
 
     def resize(self):
         if self._size == ENEMY_MAX_SIZE:
             return
-        if self._time >= self._max_time * 0.2:
+        if self._time >= self._max_time * 0.1:
             self._size = Vector2(ENEMY_MAX_SIZE)
             return
         log = math.log(self._time + 1)
@@ -55,7 +55,7 @@ class Enemy(DrawableObject):
 
         self.resize()
 
-        if self._velocity != self._direction * Enemy.speed and self._time >= self._max_time * 0.2:
+        if self._velocity != self._direction * Enemy.speed and self._time >= self._max_time * 0.1:
             self._velocity = self._direction * Enemy.speed
         if self.rect.bottom >= WINDOW_HEIGHT:
             self._velocity *= 3

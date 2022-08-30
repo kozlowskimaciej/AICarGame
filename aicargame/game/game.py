@@ -82,7 +82,7 @@ class Game:
             Enemy.spawn_timer = cur_time
 
         if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
-            Enemy.speed += 1
+            Enemy.speed += 0.5
             Enemy.vel_change_timer = cur_time
 
         self.__player.update()
