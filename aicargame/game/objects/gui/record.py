@@ -8,9 +8,8 @@ class Record(DrawableObject):
     def __init__(self, position: Vector2, size: Vector2, font: pygame.font.Font):
         super().__init__(position, size, color=(0, 0, 0))
 
-        loadRecord = open("saved/record.txt", "rt")
-        self._record = float(loadRecord.readline())
-        loadRecord.close()
+        with open("saved/record.txt", "rt") as loadRecord:
+            self._record = float(loadRecord.readline())
 
         self._isNew = False
         self._font = font
@@ -23,9 +22,8 @@ class Record(DrawableObject):
         
         if self._isNew:
             self._record = distance
-            saveRecord = open("saved/record.txt", "wt")
-            saveRecord.write(str(self._record))
-            saveRecord.close()
+            with open("saved/record.txt", "wt") as saveRecord:
+                saveRecord.write(str(self._record))
 
         if self._record < 1000:
             self.image = self._font.render("REKORD: " + str(int(self._record)) + "m", False, self._font_color)
