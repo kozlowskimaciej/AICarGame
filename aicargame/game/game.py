@@ -1,5 +1,6 @@
 import time
 from random import randint, randrange
+from os.path import exists
 
 import pygame
 from pygame import Vector2
@@ -34,6 +35,11 @@ class Game:
     def __init__(self):
         self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         pygame.display.set_caption("AICarGame")
+
+        if not exists("saved/record.txt"):
+            createFile = open("saved/record.txt", "wt")
+            createFile.write("0")
+            createFile.close()
 
         self.gui = GUI(self.window)
         self.__player = Player()
