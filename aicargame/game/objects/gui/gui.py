@@ -12,9 +12,12 @@ pygame.font.init()
 class GUI:
     window: pygame.Surface
     font = pygame.font.SysFont("Arial", 24)
-    speedo = Speedo((5, 0), (WINDOW_WIDTH / 2, 25), font)
-    mileage = Mileage((5, 25), (WINDOW_WIDTH / 2, 25), font)
-    record = Record((WINDOW_WIDTH / 2 + 5, 0), (WINDOW_WIDTH / 2, 25), font)
+
+    speedo = Speedo((WINDOW_WIDTH * 0.25 + 5, 12.5), (WINDOW_WIDTH / 2, 25), font)
+
+    mileage = Mileage((WINDOW_WIDTH * 0.25 + 5, 37.5), (WINDOW_WIDTH / 2, 25), font)
+
+    record = Record((WINDOW_WIDTH * 0.75 + 5, 12.5), (WINDOW_WIDTH / 2, 25), font)
 
     def __init__(self, window: pygame.Surface):
         self.window = window
@@ -25,9 +28,9 @@ class GUI:
         self.record.update(self.mileage.distance)
 
     def render(self):
-        self.window.blit(self.speedo.image, (5, 0))
-        self.window.blit(self.mileage.image, (5, 25))
-        self.window.blit(self.record.image, (WINDOW_WIDTH / 2, 0))
+        self.window.blit(self.speedo.image, self.speedo.rect.topleft)
+        self.window.blit(self.mileage.image, self.mileage.rect.topleft)
+        self.window.blit(self.record.image, self.record.rect.topleft)
 
 
     def reset(self):

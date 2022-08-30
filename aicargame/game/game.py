@@ -1,7 +1,8 @@
 import time
-import random
+from random import randint, randrange
 
 import pygame
+from pygame import Vector2
 
 from aicargame.globals import (
     ENEMY_START_VELOCITY,
@@ -15,6 +16,13 @@ from aicargame.game.objects.enemy import Enemy
 from aicargame.game.objects.gui.gui import GUI
 from aicargame.game.textures.textures import Textures
 
+FIRST_LANE_START = Vector2(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.35)
+SECOND_LANE_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.35)
+THIRD_LANE_START = Vector2(WINDOW_WIDTH * 0.7, WINDOW_HEIGHT * 0.35)
+
+FIRST_LANE_VECTOR = Vector2(WINDOW_WIDTH * -0.2, WINDOW_HEIGHT * 0.65).normalize()
+SECOND_LANE_VECTOR = Vector2(0, 1)
+THIRD_LANE_VECTOR = Vector2(-FIRST_LANE_VECTOR.x, FIRST_LANE_VECTOR.y)
 
 class Game:
     enemySprites = pygame.sprite.Group()
@@ -29,6 +37,24 @@ class Game:
 
         self.gui = GUI(self.window)
         self.__player = Player()
+
+    def spawnEnemy(self):
+        rand = randint(0, 5)
+        if rand == 0:
+            self.enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
+        elif rand == 1:
+            self.enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
+        elif rand == 2:
+            self.enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
+        elif rand == 3:
+            self.enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
+            self.enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
+        elif rand == 4:
+            self.enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
+            self.enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
+        else:
+            self.enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
+            self.enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
 
     def reset(self):
         self.__player.reset()
@@ -46,13 +72,13 @@ class Game:
         if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
             self.next_enemy_spawn = (
                 int(
-                    random.randrange(
+                    randrange(
                         start=ENEMY_INTERVAL[0], stop=ENEMY_INTERVAL[1], step=1
                     )
                 )
                 / 100
             )
-            self.enemySprites.add(Enemy.spawnEnemy())
+            self.spawnEnemy()
             Enemy.spawn_timer = cur_time
 
         if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
