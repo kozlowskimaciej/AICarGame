@@ -3,6 +3,7 @@ from pygame import Vector2
 
 from aicargame.game.objects.drawableobject import DrawableObject
 
+
 class Mileage(DrawableObject):
     distance = 0
     font: pygame.font.Font
@@ -15,9 +16,11 @@ class Mileage(DrawableObject):
         self.distance += speed * 0.005
 
         if self.distance < 1000:
-            self.image = self.font.render("%d m" % int(self.distance), False, (0, 0, 0))
+            self.image = self.font.render(f"{int(self.distance)} m", False, (0, 0, 0))
             return
-        self.image = self.font.render("%.2f km" % (self.distance / 1000), False, (0, 0, 0))
+        self.image = self.font.render(
+            f"{round(self.distance/ 1000,2)} km", False, (0, 0, 0)
+        )
 
     def reset(self):
         self.distance = 0
