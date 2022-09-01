@@ -22,8 +22,8 @@ class Mileage(DrawableObject):
             self.image = self.font.render(
                 f"{round(self.distance/ 1000,2)} km", False, (0, 0, 0)
             )
-            
-        self._surf.blit(self.image, self.rect.topleft)
+
+        super().render()
 
     def reset(self):
         self.distance = 0

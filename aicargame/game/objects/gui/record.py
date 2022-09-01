@@ -36,7 +36,7 @@ class Record(DrawableObject):
                 f"REKORD: {round(self._record / 1000, 2)} km", False, self._font_color
             )
 
-        self._surf.blit(self.image, self.rect.topleft)
+        super().render()
 
     def reset(self):
         self._isNew = False

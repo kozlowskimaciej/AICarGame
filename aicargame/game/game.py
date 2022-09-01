@@ -5,6 +5,7 @@ from os.path import exists
 import pygame
 from pygame import Vector2
 from aicargame.events import GAME_OVER
+from aicargame.game.objects.background import Background
 from aicargame.game.objects.gameovermenu import GameOverMenu
 
 from aicargame.globals import (
@@ -33,7 +34,7 @@ class Game:
     enemySprites = pygame.sprite.Group()
     gui: GUI
     window: pygame.Surface
-    bg = pygame.transform.scale(Textures.BACKGROUND, (WINDOW_WIDTH, WINDOW_HEIGHT))
+    bg: Background
     next_enemy_spawn: int = ENEMY_INTERVAL[1] / 100
 
     def __init__(self):
@@ -55,6 +56,7 @@ class Game:
         self._isEnded = False
         self._gameOverMenu = GameOverMenu()
 
+        self.bg = Background()
         self.gui = GUI()
         self.__player = Player()
 
@@ -140,8 +142,8 @@ class Game:
         if self._isMainMenu:
             self._mainMenu.render()
         elif self._isStarted:
-            self.window.blit(self.bg, (0, 0))
-            self.window.blit(self.__player.image, self.__player.rect.topleft)
+            self.bg.render()
+            self.__player.render()
             self.enemySprites.draw(self.window)
         elif self._isEnded:
             self._gameOverMenu.render()

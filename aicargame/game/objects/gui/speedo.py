@@ -24,7 +24,7 @@ class Speedo(DrawableObject):
 
     def render(self):
         self.image = self._font.render(f"{self.speed} km/h", False, (0, 0, 0))
-        self._surf.blit(self.image, self.rect.topleft)
+        super().render()
 
     def reset(self):
         self.speed = 100

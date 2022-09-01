@@ -26,6 +26,6 @@ class MainMenu(DrawableObject):
             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def render(self):
-        self._surf.blit(self.image, self.rect.topleft)
+        super().render()
         self._playButton.render()
         self._exitButton.render()

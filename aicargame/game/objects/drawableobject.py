@@ -21,3 +21,6 @@ class DrawableObject(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
         self.rect.center = position
+
+    def render(self):
+        self._surf.blit(self.image, self.rect.topleft)

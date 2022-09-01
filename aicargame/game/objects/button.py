@@ -21,6 +21,3 @@ class Button(DrawableObject):
         ):
             return True
         return False
-
-    def render(self):
-        self._surf.blit(self.image, self.rect.topleft)
