@@ -17,12 +17,16 @@ class GameOverMenu(DrawableObject):
     def __init__(self, surf: pygame.Surface):
         super().__init__((WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), (WINDOW_WIDTH, WINDOW_HEIGHT), Textures.MENU_BACKGROUND)
         self._surf = surf
-        self._startAgainButton = Button(surf, (WINDOW_WIDTH / 2, 600))
+        self._playAgainButton = Button(surf, (WINDOW_WIDTH / 2, 600), Textures.PLAYAGAIN_BUTTON)
+        self._exitButton = Button(surf, (WINDOW_WIDTH / 2, 700), Textures.EXIT_BUTTON)
 
     def update(self, mousePos, mouseClicked):
-        if self._startAgainButton.isClicked(mousePos, mouseClicked[0]):
+        if self._playAgainButton.isClicked(mousePos, mouseClicked[0]):
             pygame.event.post(pygame.event.Event(START_GAME))
+        if self._exitButton.isClicked(mousePos, mouseClicked[0]):
+            pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def render(self):
         self._surf.blit(self.image, self.rect.topleft)
-        self._startAgainButton.render()
+        self._playAgainButton.render()
+        self._exitButton.render()

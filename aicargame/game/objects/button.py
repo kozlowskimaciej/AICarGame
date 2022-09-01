@@ -10,8 +10,8 @@ from aicargame.globals import (
 )
 
 class Button(DrawableObject):
-    def __init__(self, surf: pygame.Surface, position: Vector2):
-        super().__init__(position, BUTTON_SIZE, color=(0, 0, 0))
+    def __init__(self, surf: pygame.Surface, position: Vector2, texture=None):
+        super().__init__(position, BUTTON_SIZE, texture)
         self._surf = surf
 
     def isClicked(self, mousePos: tuple[int, int], isLeftButtonClicked: bool):

@@ -31,6 +31,9 @@ class TexturesMeta(EnumMeta):
 class Textures(Enum, metaclass=TexturesMeta):
 
     MENU_BACKGROUND = "menu_bg.png"
+    PLAY_BUTTON = "play_button.png"
+    EXIT_BUTTON = "exit_button.png"
+    PLAYAGAIN_BUTTON = "playagain_button.png"
     BACKGROUND = "bg.png"
     PLAYER = "player.png"
     ENEMY = "player.png"
