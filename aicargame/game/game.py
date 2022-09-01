@@ -4,6 +4,8 @@ from os.path import exists
 
 import pygame
 from pygame import Vector2
+from aicargame.events import GAME_OVER
+from aicargame.game.objects.gameovermenu import GameOverMenu
 
 from aicargame.globals import (
     ENEMY_START_VELOCITY,
@@ -41,21 +43,31 @@ class Game:
             with open("saved/record.txt", "wt") as createFile:
                 createFile.write("0")
 
+        self._mousePos: tuple[int, int]
+        self._mouseClicked: tuple[bool, bool, bool] | tuple[bool, bool, bool, bool, bool]
+
         self._isMainMenu = True
-        self._mainMenu = MainMenu(self, self.window)
-        self._isMainGame = False
-        self._isGameOver = False
+        self._mainMenu = MainMenu(self.window)
+
+        self._isStarted = False
+
+        self._isEnded = False
+        self._gameOverMenu = GameOverMenu(self.window)
 
         self.gui = GUI(self.window)
         self.__player = Player()
 
-    def setMainGame(self):
+    def startGame(self):
         self._isMainMenu = False
-        self._isMainGame = True
-        self._isGameOver = False
+        self._isStarted = True
+        self._isEnded = False
 
         Enemy.spawn_timer = time.time()
         Enemy.vel_change_timer = time.time()
+
+    def endGame(self):
+        self._isStarted = False
+        self._isEnded = True
 
     def spawnEnemy(self):
         rand = randint(0, 5)
@@ -84,11 +96,14 @@ class Game:
     def checkCollisions(self):
         if pygame.sprite.spritecollide(self.__player, self.enemySprites, False) != []:
             self.reset()
+            pygame.event.post(pygame.event.Event(GAME_OVER))
 
     def update(self):
+        self.updateMouse()
+
         if self._isMainMenu:
-            self._mainMenu.update()
-        else:
+            self._mainMenu.update(self._mousePos, self._mouseClicked)
+        elif self._isStarted:
             cur_time = time.time()
 
             if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
@@ -111,13 +126,21 @@ class Game:
             self.enemySprites.update()
             self.gui.update()
             self.checkCollisions()
+        elif self._isEnded:
+            self._gameOverMenu.update(self._mousePos, self._mouseClicked)
+
+    def updateMouse(self):
+        self._mousePos = pygame.mouse.get_pos()
+        self._mouseClicked = pygame.mouse.get_pressed()
 
     def render(self):
         if self._isMainMenu:
             self._mainMenu.render()
-        else:
+        elif self._isStarted:
             self.window.blit(self.bg, (0, 0))
             self.window.blit(self.__player.image, self.__player.rect.topleft)
             self.enemySprites.draw(self.window)
             self.gui.render()
+        elif self._isEnded:
+            self._gameOverMenu.render()
         pygame.display.update()
