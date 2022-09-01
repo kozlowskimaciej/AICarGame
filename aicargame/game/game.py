@@ -12,6 +12,7 @@ from aicargame.globals import (
     WINDOW_WIDTH,
     ENEMY_INTERVAL,
 )
+from aicargame.game.objects.mainmenu import MainMenu
 from aicargame.game.objects.player import Player
 from aicargame.game.objects.enemy import Enemy
 from aicargame.game.objects.gui.gui import GUI
@@ -40,8 +41,21 @@ class Game:
             with open("saved/record.txt", "wt") as createFile:
                 createFile.write("0")
 
+        self._isMainMenu = True
+        self._mainMenu = MainMenu(self, self.window)
+        self._isMainGame = False
+        self._isGameOver = False
+
         self.gui = GUI(self.window)
         self.__player = Player()
+
+    def setMainGame(self):
+        self._isMainMenu = False
+        self._isMainGame = True
+        self._isGameOver = False
+
+        Enemy.spawn_timer = time.time()
+        Enemy.vel_change_timer = time.time()
 
     def spawnEnemy(self):
         rand = randint(0, 5)
@@ -72,32 +86,38 @@ class Game:
             self.reset()
 
     def update(self):
-        cur_time = time.time()
+        if self._isMainMenu:
+            self._mainMenu.update()
+        else:
+            cur_time = time.time()
 
-        if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
-            self.next_enemy_spawn = (
-                int(
-                    randrange(
-                        start=ENEMY_INTERVAL[0], stop=ENEMY_INTERVAL[1], step=1
+            if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
+                self.next_enemy_spawn = (
+                    int(
+                        randrange(
+                            start=ENEMY_INTERVAL[0], stop=ENEMY_INTERVAL[1], step=1
+                        )
                     )
+                    / 100
                 )
-                / 100
-            )
-            self.spawnEnemy()
-            Enemy.spawn_timer = cur_time
+                self.spawnEnemy()
+                Enemy.spawn_timer = cur_time
 
-        if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
-            Enemy.speed += 0.5
-            Enemy.vel_change_timer = cur_time
+            if cur_time - Enemy.vel_change_timer >= SPEED_CHANGE_TIMER:
+                Enemy.speed += 0.5
+                Enemy.vel_change_timer = cur_time
 
-        self.__player.update()
-        self.enemySprites.update()
-        self.gui.update()
-        self.checkCollisions()
+            self.__player.update()
+            self.enemySprites.update()
+            self.gui.update()
+            self.checkCollisions()
 
     def render(self):
-        self.window.blit(self.bg, (0, 0))
-        self.window.blit(self.__player.image, self.__player.rect.topleft)
-        self.enemySprites.draw(self.window)
-        self.gui.render()
+        if self._isMainMenu:
+            self._mainMenu.render()
+        else:
+            self.window.blit(self.bg, (0, 0))
+            self.window.blit(self.__player.image, self.__player.rect.topleft)
+            self.enemySprites.draw(self.window)
+            self.gui.render()
         pygame.display.update()

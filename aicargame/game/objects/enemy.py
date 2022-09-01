@@ -20,8 +20,8 @@ ENEMY_MAX_SIZE = Vector2(WINDOW_WIDTH, WINDOW_WIDTH * 0.9) * ENEMY_MAX_SIZE
 ENEMY_START_VELOCITY = WINDOW_HEIGHT * ENEMY_START_VELOCITY
 
 class Enemy(DrawableObject):
-    spawn_timer = time.time()
-    vel_change_timer = time.time()
+    spawn_timer: float
+    vel_change_timer: float
     speed = ENEMY_START_VELOCITY
 
     def __init__(self, position: Vector2, direction: Vector2):

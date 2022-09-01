@@ -4,6 +4,9 @@ from pygame import Vector2
 WINDOW_WIDTH = 512
 WINDOW_HEIGHT = 768
 
+# BUTTON
+BUTTON_SIZE = Vector2(40, 20)
+
 # SPEEDOMETER
 SPEED_CHANGE_TIMER = 4  # in seconds
 
