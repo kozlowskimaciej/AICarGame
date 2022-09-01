@@ -26,14 +26,17 @@ class Record(DrawableObject):
             with open("saved/record.txt", "wt") as saveRecord:
                 saveRecord.write(str(self._record))
 
+    def render(self):
         if self._record < 1000:
             self.image = self._font.render(
                 f"REKORD: {int(self._record)} m", False, self._font_color
             )
-            return
-        self.image = self._font.render(
-            f"REKORD: {round(self._record / 1000, 2)} km", False, self._font_color
-        )
+        else:
+            self.image = self._font.render(
+                f"REKORD: {round(self._record / 1000, 2)} km", False, self._font_color
+            )
+
+        self._surf.blit(self.image, self.rect.topleft)
 
     def reset(self):
         self._isNew = False

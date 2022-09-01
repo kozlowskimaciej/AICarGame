@@ -9,6 +9,7 @@ class DrawableObject(pygame.sprite.Sprite):
 
         super().__init__()
 
+        self._surf = pygame.display.get_surface()
         self.image = pygame.Surface(size)
         self.RAW_TEXTURE = texture
 

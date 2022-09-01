@@ -15,12 +15,15 @@ class Mileage(DrawableObject):
     def update(self, speed: float):
         self.distance += speed * 0.005
 
+    def render(self):
         if self.distance < 1000:
             self.image = self.font.render(f"{int(self.distance)} m", False, (0, 0, 0))
-            return
-        self.image = self.font.render(
-            f"{round(self.distance/ 1000,2)} km", False, (0, 0, 0)
-        )
+        else:
+            self.image = self.font.render(
+                f"{round(self.distance/ 1000,2)} km", False, (0, 0, 0)
+            )
+            
+        self._surf.blit(self.image, self.rect.topleft)
 
     def reset(self):
         self.distance = 0

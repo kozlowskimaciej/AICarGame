@@ -14,11 +14,10 @@ from aicargame.events import (
 )
 
 class GameOverMenu(DrawableObject):
-    def __init__(self, surf: pygame.Surface):
+    def __init__(self):
         super().__init__((WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), (WINDOW_WIDTH, WINDOW_HEIGHT), Textures.MENU_BACKGROUND)
-        self._surf = surf
-        self._playAgainButton = Button(surf, (WINDOW_WIDTH / 2, 600), Textures.PLAYAGAIN_BUTTON)
-        self._exitButton = Button(surf, (WINDOW_WIDTH / 2, 700), Textures.EXIT_BUTTON)
+        self._playAgainButton = Button((WINDOW_WIDTH / 2, 600), Textures.PLAYAGAIN_BUTTON)
+        self._exitButton = Button((WINDOW_WIDTH / 2, 700), Textures.EXIT_BUTTON)
 
     def update(self, mousePos, mouseClicked):
         if self._playAgainButton.isClicked(mousePos, mouseClicked[0]):

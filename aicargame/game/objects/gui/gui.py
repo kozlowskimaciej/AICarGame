@@ -11,9 +11,7 @@ from aicargame.globals import (
 pygame.font.init()
 
 class GUI:
-    def __init__(self, window: pygame.Surface):
-        self._window = window
-        
+    def __init__(self):
         font = pygame.font.SysFont("Arial", round(WINDOW_HEIGHT * 0.031))
         self._speedo = Speedo((WINDOW_WIDTH * 0.26, WINDOW_HEIGHT * 0.017), (WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.033), font)
         self._mileage = Mileage((WINDOW_WIDTH * 0.26, WINDOW_HEIGHT * 0.05), (WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.033), font)
@@ -25,10 +23,9 @@ class GUI:
         self._record.update(self._mileage.distance)
 
     def render(self):
-        self._window.blit(self._speedo.image, self._speedo.rect.topleft)
-        self._window.blit(self._mileage.image, self._mileage.rect.topleft)
-        self._window.blit(self._record.image, self._record.rect.topleft)
-
+        self._speedo.render()
+        self._mileage.render()
+        self._record.render()
 
     def reset(self):
         self._speedo.reset()

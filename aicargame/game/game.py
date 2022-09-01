@@ -18,6 +18,7 @@ from aicargame.game.objects.mainmenu import MainMenu
 from aicargame.game.objects.player import Player
 from aicargame.game.objects.enemy import Enemy
 from aicargame.game.objects.gui.gui import GUI
+from aicargame.game.objects.gui.speedo import Speedo
 from aicargame.game.textures.textures import Textures
 
 FIRST_LANE_START = Vector2(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.35)
@@ -47,14 +48,14 @@ class Game:
         self._mouseClicked: tuple[bool, bool, bool] | tuple[bool, bool, bool, bool, bool]
 
         self._isMainMenu = True
-        self._mainMenu = MainMenu(self.window)
+        self._mainMenu = MainMenu()
 
         self._isStarted = False
 
         self._isEnded = False
-        self._gameOverMenu = GameOverMenu(self.window)
+        self._gameOverMenu = GameOverMenu()
 
-        self.gui = GUI(self.window)
+        self.gui = GUI()
         self.__player = Player()
 
     def startGame(self):
@@ -64,6 +65,8 @@ class Game:
 
         Enemy.spawn_timer = time.time()
         Enemy.vel_change_timer = time.time()
+        Speedo.timer = time.time()
+        self.reset()
 
     def endGame(self):
         self._isStarted = False
@@ -95,7 +98,6 @@ class Game:
 
     def checkCollisions(self):
         if pygame.sprite.spritecollide(self.__player, self.enemySprites, False) != []:
-            self.reset()
             pygame.event.post(pygame.event.Event(GAME_OVER))
 
     def update(self):
@@ -124,10 +126,11 @@ class Game:
 
             self.__player.update()
             self.enemySprites.update()
-            self.gui.update()
             self.checkCollisions()
+            self.gui.update()
         elif self._isEnded:
             self._gameOverMenu.update(self._mousePos, self._mouseClicked)
+
 
     def updateMouse(self):
         self._mousePos = pygame.mouse.get_pos()
@@ -140,7 +143,8 @@ class Game:
             self.window.blit(self.bg, (0, 0))
             self.window.blit(self.__player.image, self.__player.rect.topleft)
             self.enemySprites.draw(self.window)
-            self.gui.render()
         elif self._isEnded:
             self._gameOverMenu.render()
+
+        self.gui.render()
         pygame.display.update()

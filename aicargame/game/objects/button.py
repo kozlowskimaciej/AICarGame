@@ -4,15 +4,12 @@ from pygame import Vector2
 from aicargame.game.objects.drawableobject import DrawableObject
 
 from aicargame.globals import (
-    BUTTON_SIZE,
-    WINDOW_HEIGHT,
-    WINDOW_WIDTH
+    BUTTON_SIZE
 )
 
 class Button(DrawableObject):
-    def __init__(self, surf: pygame.Surface, position: Vector2, texture=None):
+    def __init__(self, position: Vector2, texture=None):
         super().__init__(position, BUTTON_SIZE, texture)
-        self._surf = surf
 
     def isClicked(self, mousePos: tuple[int, int], isLeftButtonClicked: bool):
         if (
