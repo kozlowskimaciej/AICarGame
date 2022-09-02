@@ -4,9 +4,12 @@ from os.path import exists
 
 import pygame
 from pygame import Vector2
-from aicargame.events import GAME_OVER
 from aicargame.game.objects.background import Background
-from aicargame.game.objects.gameovermenu import GameOverMenu
+from aicargame.game.objects.player import Player
+from aicargame.game.objects.enemy import Enemy
+from aicargame.game.objects.gui.gui import GUI
+from aicargame.game.objects.gui.speedo import Speedo
+from aicargame.game.textures.textures import Textures
 
 from aicargame.globals import (
     ENEMY_START_VELOCITY,
@@ -15,12 +18,10 @@ from aicargame.globals import (
     WINDOW_WIDTH,
     ENEMY_INTERVAL,
 )
-from aicargame.game.objects.mainmenu import MainMenu
-from aicargame.game.objects.player import Player
-from aicargame.game.objects.enemy import Enemy
-from aicargame.game.objects.gui.gui import GUI
-from aicargame.game.objects.gui.speedo import Speedo
-from aicargame.game.textures.textures import Textures
+
+from aicargame.events import (
+    GAME_OVER
+)
 
 FIRST_LANE_START = Vector2(WINDOW_WIDTH * 0.3, WINDOW_HEIGHT * 0.35)
 SECOND_LANE_START = Vector2(WINDOW_WIDTH * 0.5, WINDOW_HEIGHT * 0.35)
@@ -49,28 +50,29 @@ class Game:
         self._mouseClicked: tuple[bool, bool, bool] | tuple[bool, bool, bool, bool, bool]
 
         self._isMainMenu = True
-        self._mainMenu = MainMenu()
-
         self._isStarted = False
-
         self._isEnded = False
-        self._gameOverMenu = GameOverMenu()
 
         self.bg = Background()
         self.gui = GUI()
         self.__player = Player()
 
     def startGame(self):
-        self._isMainMenu = False
-        self._isStarted = True
-        self._isEnded = False
-
+        self.bg.texture = Textures.BACKGROUND
+        self.gui.startGame()
         Enemy.spawn_timer = time.time()
         Enemy.vel_change_timer = time.time()
         Speedo.timer = time.time()
         self.reset()
 
+        self._isMainMenu = False
+        self._isStarted = True
+        self._isEnded = False
+
     def endGame(self):
+        self.bg.texture = Textures.MENU_BACKGROUND
+        self.gui.endGame()
+
         self._isStarted = False
         self._isEnded = True
 
@@ -104,10 +106,9 @@ class Game:
 
     def update(self):
         self.updateMouse()
+        self.gui.update(self._mousePos, self._mouseClicked, self._isStarted)
 
-        if self._isMainMenu:
-            self._mainMenu.update(self._mousePos, self._mouseClicked)
-        elif self._isStarted:
+        if self._isStarted:
             cur_time = time.time()
 
             if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
@@ -129,24 +130,17 @@ class Game:
             self.__player.update()
             self.enemySprites.update()
             self.checkCollisions()
-            self.gui.update()
-        elif self._isEnded:
-            self._gameOverMenu.update(self._mousePos, self._mouseClicked)
-
 
     def updateMouse(self):
         self._mousePos = pygame.mouse.get_pos()
         self._mouseClicked = pygame.mouse.get_pressed()
 
     def render(self):
-        if self._isMainMenu:
-            self._mainMenu.render()
-        elif self._isStarted:
-            self.bg.render()
+        self.bg.render()
+        self.gui.render()
+
+        if self._isStarted:
             self.__player.render()
             self.enemySprites.draw(self.window)
-        elif self._isEnded:
-            self._gameOverMenu.render()
 
-        self.gui.render()
         pygame.display.update()
