@@ -20,6 +20,7 @@ from aicargame.globals import (
 )
 
 from aicargame.events import (
+    START_GAME,
     GAME_OVER
 )
 
@@ -32,14 +33,9 @@ SECOND_LANE_VECTOR = Vector2(0, 1)
 THIRD_LANE_VECTOR = Vector2(-FIRST_LANE_VECTOR.x, FIRST_LANE_VECTOR.y)
 
 class Game:
-    enemySprites = pygame.sprite.Group()
-    gui: GUI
-    window: pygame.Surface
-    bg: Background
-    next_enemy_spawn: int = ENEMY_INTERVAL[1] / 100
-
     def __init__(self):
-        self.window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self._window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self._isRunning = True
         pygame.display.set_caption("AICarGame")
 
         if not exists("saved/record.txt"):
@@ -53,13 +49,22 @@ class Game:
         self._isStarted = False
         self._isEnded = False
 
-        self.bg = Background()
-        self.gui = GUI()
-        self.__player = Player()
+        self._bg = Background()
+        self._gui = GUI()
+        self._player = Player()
+        self._enemySprites = pygame.sprite.Group()
+        self._next_enemy_spawn = ENEMY_INTERVAL[1] / 100
+
+    @property
+    def isRunning(self):
+        return self._isRunning
+    @isRunning.setter
+    def isRunning(self, value):
+        self._isRunning = value
 
     def startGame(self):
-        self.bg.texture = Textures.BACKGROUND
-        self.gui.startGame()
+        self._bg.texture = Textures.BACKGROUND
+        self._gui.startGame()
         Enemy.spawn_timer = time.time()
         Enemy.vel_change_timer = time.time()
         Speedo.timer = time.time()
@@ -70,8 +75,8 @@ class Game:
         self._isEnded = False
 
     def endGame(self):
-        self.bg.texture = Textures.MENU_BACKGROUND
-        self.gui.endGame()
+        self._bg.texture = Textures.MENU_BACKGROUND
+        self._gui.endGame()
 
         self._isStarted = False
         self._isEnded = True
@@ -79,40 +84,49 @@ class Game:
     def spawnEnemy(self):
         rand = randint(0, 5)
         if rand == 0:
-            self.enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
+            self._enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
         elif rand == 1:
-            self.enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
+            self._enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
         elif rand == 2:
-            self.enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
+            self._enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
         elif rand == 3:
-            self.enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
-            self.enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
+            self._enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
+            self._enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
         elif rand == 4:
-            self.enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
-            self.enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
+            self._enemySprites.add(Enemy(FIRST_LANE_START, FIRST_LANE_VECTOR))
+            self._enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
         else:
-            self.enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
-            self.enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
+            self._enemySprites.add(Enemy(SECOND_LANE_START, SECOND_LANE_VECTOR))
+            self._enemySprites.add(Enemy(THIRD_LANE_START, THIRD_LANE_VECTOR))
 
     def reset(self):
-        self.__player.reset()
-        self.enemySprites.empty()
+        self._player.reset()
+        self._enemySprites.empty()
         Enemy.speed = WINDOW_HEIGHT * ENEMY_START_VELOCITY        
-        self.gui.reset()
+        self._gui.reset()
 
     def checkCollisions(self):
-        if pygame.sprite.spritecollide(self.__player, self.enemySprites, False) != []:
+        if pygame.sprite.spritecollide(self._player, self._enemySprites, False) != []:
             pygame.event.post(pygame.event.Event(GAME_OVER))
 
     def update(self):
+        pygame.time.delay(10)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.isRunning = False
+            if event.type == START_GAME:
+                self.startGame()
+            if event.type == GAME_OVER:
+                self.endGame()
+
         self.updateMouse()
-        self.gui.update(self._mousePos, self._mouseClicked, self._isStarted)
+        self._gui.update(self._mousePos, self._mouseClicked, self._isStarted)
 
         if self._isStarted:
             cur_time = time.time()
 
-            if cur_time - Enemy.spawn_timer >= self.next_enemy_spawn:
-                self.next_enemy_spawn = (
+            if cur_time - Enemy.spawn_timer >= self._next_enemy_spawn:
+                self._next_enemy_spawn = (
                     int(
                         randrange(
                             start=ENEMY_INTERVAL[0], stop=ENEMY_INTERVAL[1], step=1
@@ -127,8 +141,8 @@ class Game:
                 Enemy.speed += 0.5
                 Enemy.vel_change_timer = cur_time
 
-            self.__player.update()
-            self.enemySprites.update()
+            self._player.update()
+            self._enemySprites.update()
             self.checkCollisions()
 
     def updateMouse(self):
@@ -136,11 +150,11 @@ class Game:
         self._mouseClicked = pygame.mouse.get_pressed()
 
     def render(self):
-        self.bg.render()
-        self.gui.render()
+        self._bg.render()
+        self._gui.render()
 
         if self._isStarted:
-            self.__player.render()
-            self.enemySprites.draw(self.window)
+            self._player.render()
+            self._enemySprites.draw(self._window)
 
         pygame.display.update()
