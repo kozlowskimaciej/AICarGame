@@ -51,8 +51,8 @@ class Game:
 
         self._bg = Background()
         self._gui = GUI()
-        self._player = Player()
         self._enemySprites = pygame.sprite.Group()
+        self._player = Player(self._enemySprites)
         self._next_enemy_spawn = ENEMY_INTERVAL[1] / 100
 
     @property
@@ -155,6 +155,11 @@ class Game:
 
         if self._isStarted:
             self._player.render()
+            pygame.draw.line(self._window, (255, 0, 0), self._player.rect.center, Vector2(self._player.rect.center) + Vector2(0, -1).rotate(-60)*270, 3)
+            pygame.draw.line(self._window, (255, 0, 0), self._player.rect.center, Vector2(self._player.rect.center) + Vector2(0, -1).rotate(-30)*270, 3)
+            pygame.draw.line(self._window, (255, 0, 0), self._player.rect.center, Vector2(self._player.rect.center) + Vector2(0, -1).rotate(0)*270, 3)
+            pygame.draw.line(self._window, (255, 0, 0), self._player.rect.center, Vector2(self._player.rect.center) + Vector2(0, -1).rotate(30)*270, 3)
+            pygame.draw.line(self._window, (255, 0, 0), self._player.rect.center, Vector2(self._player.rect.center) + Vector2(0, -1).rotate(60)*270, 3)
             self._enemySprites.draw(self._window)
 
         pygame.display.update()
